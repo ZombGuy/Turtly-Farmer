@@ -6,6 +6,11 @@
 -- Main file, this is what runs the program.
 colom = 0
 
+local seed = "non"
+local harvested_item = "farmersdelight:rice_panicle"
+local crop_tile = "farmersdelight:rice_panicles"
+local crop_maturity_stage = 3
+
 function dock()
     _, insBlock = turtle.inspectDown()
     fenceBlw = insBlock.name ~= "minecraft:oak_fence"
@@ -39,7 +44,7 @@ function emptyInv()
     for i=1,16 do
         turtle.select(i)
         if turtle.getItemDetail() ~= nil then
-            if turtle.getItemDetail().name == "minecraft:wheat_seeds" then
+            if turtle.getItemDetail().name == harvested_item then
                 turtle.drop()
             end
         end
@@ -82,17 +87,13 @@ function farm()
     end
     if turtle.inspectDown() then
         _, insBlock = turtle.inspectDown()
-        if insBlock.state.age == 7 then
+        if insBlock.state.age == crop_maturity_stage then
             turtle.digDown()
-            turtle.placeDown()
-        elseif insBlock.name ~= "minecraft:wheat"  then
+        elseif insBlock.name ~= crop_tile  then
             if insBlock.name ~= "minecraft:glowstone" then
                 turtle.digDown()
-                turtle.placeDown()
             end
         end
-    else
-        turtle.placeDown()
     end
 end
 
@@ -140,5 +141,5 @@ while true do
     shell.run("clear")
     print("Sleeping for 20min...")
     print("Fuel level: " .. turtle.getFuelLevel())
-    sleep(60*20)
+    sleep(60*10)
 end
